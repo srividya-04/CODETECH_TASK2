@@ -1,0 +1,74 @@
+CREATE TABLE Books (
+    BookID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(100) NOT NULL,
+    Author VARCHAR(100),
+    Publisher VARCHAR(100),
+    Category VARCHAR(50),
+    CopiesAvailable INT NOT NULL
+);
+CREATE TABLE Members (
+    MemberID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(15),
+    JoinDate DATE NOT NULL
+);
+CREATE TABLE Transactions (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    MemberID INT NOT NULL,
+    BookID INT NOT NULL,
+    BorrowDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (MemberID) REFERENCES Members(MemberID) ON DELETE CASCADE,
+    FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE
+);
+select * from Books;
+select * from Members;
+select * from Transactions;
+INSERT INTO Books (Title, Author, Publisher, Category, CopiesAvailable)
+VALUES
+('The Great Gatsby', 'F. Scott Fitzgerald', 'Scribner', 'Fiction', 5),
+('1984', 'George Orwell', 'Secker & Warburg', 'Dystopian', 4),
+('To Kill a Mockingbird', 'Harper Lee', 'J.B. Lippincott & Co.', 'Fiction', 3);
+
+INSERT INTO Members (Name, Email, Phone, JoinDate)
+VALUES
+('John Doe', 'johndoe@example.com', '1234567890', '2024-01-01'),
+('Jane Smith', 'janesmith@example.com', '0987654321', '2024-02-15');
+
+INSERT INTO Transactions (MemberID, BookID, BorrowDate, ReturnDate)
+VALUES
+(1, 1, '2024-11-01', NULL),
+(2, 2, '2024-11-10', '2024-11-15');
+
+SELECT * FROM Books;
+SELECT * FROM Members;
+SELECT * FROM Transactions;
+
+SELECT b.Title, t.BorrowDate, t.ReturnDate
+FROM Books b
+JOIN Transactions t ON b.BookID = t.BookID
+WHERE t.MemberID = 1;
+
+SELECT Category, SUM(CopiesAvailable) AS TotalCopies
+FROM Books
+GROUP BY Category;
+UPDATE Books
+SET CopiesAvailable = CopiesAvailable - 1
+WHERE BookID = 1;
+
+UPDATE Transactions
+SET ReturnDate = '2024-11-20'
+WHERE TransactionID = 1;
+
+SELECT * FROM Books;
+SELECT * FROM Members;
+SELECT * FROM Transactions;
+DELETE FROM Members
+WHERE MemberID = 2;
+
+DELETE FROM Books
+WHERE BookID = 2;
+SELECT * FROM Books;
+SELECT * FROM Members;
+SELECT * FROM Transactions;
